@@ -1,0 +1,24 @@
+{
+  "name": "selenium-ts-jest-example",
+  "version": "1.0.0",
+  "description": "Web UI automation example project with Selenium+TypeScript+Jest",
+  "license": "ISC",
+  "author": "Davit Peradze",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "report": "npx http-server ./test-report -o -p 8081"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/selenium-webdriver": "^4.1.28",
+    "jest": "^30.1.3",
+    "selenium-webdriver": "^4.35.0",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "jest-html-reporter": "^4.3.0"
+  }
+}
