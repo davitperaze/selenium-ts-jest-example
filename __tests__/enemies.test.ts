@@ -1,0 +1,17 @@
+import EnemiesPage from "../pages/enemies.page";
+import strings from "../resources/strings";
+import { createPageTests } from "../utils/test-setup";
+
+createPageTests("Enemies", EnemiesPage, "enemies", "Enemies", (getPage) => {
+    it(`Enemies hero content title should be: ${strings.heroContent.enemies?.title}`, async () => {
+        const mainTitle = await getPage().mainTitle();
+        const title = await mainTitle.getText();
+        expect(title).toBe(strings.heroContent.enemies?.title);
+    });
+
+    it(`Sub title should be: ${strings.heroContent.enemies?.subtitle}`, async () => {
+        const subTitle = await getPage().subTitle();
+        const title = await subTitle.getText();
+        expect(title).toBe(strings.heroContent.enemies?.subtitle);
+    });
+});
