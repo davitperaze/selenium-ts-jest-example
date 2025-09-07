@@ -22,7 +22,7 @@ export function createPageTests<T extends BasePage>(
     PageObject: PageObjectClass<T>,
     urlPath: string,
     activeTabText: string,
-    pageSpecificTests: (getPage: () => T) => void,
+    pageSpecificTests: (getPage: () => T) => void
 ) {
     describe(`${pageName} page tests`, () => {
         let driver: WebDriver;
@@ -52,7 +52,9 @@ export function createPageTests<T extends BasePage>(
         pageSpecificTests(() => {
             if (!page) {
                 // Throw a clear error if the page object was not initialized.
-                throw new Error("Page object was not initialized. The driver might have failed to start.");
+                throw new Error(
+                    "Page object was not initialized. The driver might have failed to start."
+                );
             }
             return page;
         });
