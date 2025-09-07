@@ -1,15 +1,18 @@
 const isCI = process.env.CI === 'true';
 
 const reporters = [
+    "default", "jest-html-reporters"
     "default"
 ];
 
 if (isCI) {
     reporters.push(['jest-junit', { outputDirectory: 'reports', outputName: 'report.xml' }]);
 } else {
-    reporters.push(["jest-html-reporter", {
-        "pageTitle": "Test Report",
-        "outputPath": "./test-report/index.html"
+    reporters.push(["jest-html-reporters", {
+        "publicPath": "./test-report/",
+        "filename": "report.html",
+        "darkTheme": true,
+        "pageTitle": "Test Report"
     }]);
 }
 
