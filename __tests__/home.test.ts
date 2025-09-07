@@ -5,15 +5,13 @@ import { runCharacterCardTests } from "./character-cards.shared";
 
 createPageTests("Home", HomePage, "", "Doctors", (getPage) => {
     it(`Main title should be: ${strings.heroContent.doctors?.title}`, async () => {
-        const mainTitle = await getPage().mainTitle();
-        const title = await mainTitle.getText();
-        expect(title).toBe(strings.heroContent.doctors?.title);
+        const mainTitle = await getPage().getMainTitleText();
+        expect(mainTitle).toBe(strings.heroContent.doctors?.title);
     });
 
     it(`Sub title should be: ${strings.heroContent.doctors?.subtitle}`, async () => {
-        const subTitle = await getPage().subTitle();
-        const title = await subTitle.getText();
-        expect(title).toBe(strings.heroContent.doctors?.subtitle);
+        const subTitle = await getPage().getSubTitleText();
+        expect(subTitle).toBe(strings.heroContent.doctors?.subtitle);
     });
 
     it(`17 cards should be displayed for the doctors`, async () => {
