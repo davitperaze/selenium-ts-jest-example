@@ -1,7 +1,6 @@
 const isCI = process.env.CI === 'true';
 
 const reporters = [
-    "default", "jest-html-reporters"
     "default"
 ];
 
@@ -20,14 +19,6 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     testMatch: ["**/__tests__/**/*.test.ts"],
-    transform: {
-        '^.+\\.tsx?$': [
-            'ts-jest',
-            {
-                tsconfig: 'tsconfig.json',
-            },
-        ],
-    },
-    setupFilesAfterEnv: [],
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
     reporters: reporters
 };

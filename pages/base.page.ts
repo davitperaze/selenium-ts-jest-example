@@ -1,13 +1,26 @@
 import {
     Locator,
     WebDriver,
-    WebElement,
-    WebElementPromise,
     By,
+    WebElement, 
+    until,
 } from "selenium-webdriver";
 
 export class BasePage {
     protected driver: WebDriver;
+    protected timeout: number = 10000;
+    
+    protected locators = {
+        headerLogo: By.css("[data-testid='header-brand-button']"),
+        themeSwitcher: By.css("[data-testid='theme-toggle-button']"),
+        mainTitle: By.css("[data-testid='main-title']"),
+        subTitle: By.css("[data-testid='hero-subtitle']"),
+        navigationTab: By.css("[data-testid='category-nav']"),
+        navigationTabButtons: By.css("[data-testid='category-nav'] button"),
+        activeNavigationTabButton: By.css(
+            "[data-testid='category-nav'] button[data-active='true']"
+        ),
+    };
 
     constructor(driver: WebDriver) {
         this.driver = driver;
@@ -18,48 +31,42 @@ export class BasePage {
     }
 
     async getPageTitle(): Promise<string> {
-        return await this.driver.getTitle();
+        return this.driver.getTitle();
     }
 
     async navigateTo(url: string): Promise<void> {
         await this.driver.get(url);
     }
 
-    async findElement(locator: Locator): Promise<WebElement> {
-        return await this.driver.findElement(locator);
+    // Helper method for explicit waits
+    protected async waitAndFindElement(locator: Locator): Promise<WebElement> {
+        return this.driver.wait(until.elementLocated(locator), this.timeout);
     }
 
-    async headerLogo(): Promise<WebElement> {
-        return await this.findElement(
-            By.css("[data-testid='header-brand-button']")
-        );
+    // Action-oriented methods
+    async clickHeaderLogo(): Promise<void> {
+        const element = await this.waitAndFindElement(this.locators.headerLogo);
+        await element.click();
     }
 
-    async themeSwitcher(): Promise<WebElement> {
-        return await this.findElement(
-            By.css("[data-testid='theme-toggle-button']")
-        );
+    async clickThemeSwitcher(): Promise<void> {
+        const element = await this.waitAndFindElement(this.locators.themeSwitcher);
+        await element.click();
     }
 
-    async mainTitle(): Promise<WebElement> {
-        const title = await this.findElement(
-            By.css("[data-testid='main-title']")
-        );
-
-        return title;
+    async getMainTitleText(): Promise<string> {
+        const element = await this.waitAndFindElement(this.locators.mainTitle);
+        return element.getText();
     }
 
-    async subTitle(): Promise<WebElement> {
-        const title = await this.findElement(
-            By.css("[data-testid='hero-subtitle']")
-        );
-
-        return title;
+    async getSubTitleText(): Promise<string> {
+        const element = await this.waitAndFindElement(this.locators.subTitle);
+        return element.getText();
     }
 
     async getTheme(): Promise<string> {
-        const htmlElement = await this.themeSwitcher();
-        return await htmlElement.getAttribute("data-theme");
+        const element = await this.waitAndFindElement(this.locators.themeSwitcher);
+        return element.getAttribute("data-theme");
     }
 
     async getPreferedTheme(): Promise<string> {
@@ -69,6 +76,23 @@ export class BasePage {
         return isDarkMode ? "dark" : "light";
     }
 
+    // Methods for retrieving elements for assertions
+    async getHeaderLogo(): Promise<WebElement> {
+        return this.waitAndFindElement(this.locators.headerLogo);
+    }
+
+    async getThemeSwitcher(): Promise<WebElement> {
+        return this.waitAndFindElement(this.locators.themeSwitcher);
+    }
+
+    async getNavigationTabButtons(): Promise<WebElement[]> {
+        return this.driver.findElements(this.locators.navigationTabButtons);
+    }
+
+    async getActiveNavigationTabButton(): Promise<WebElement> {
+        return this.waitAndFindElement(this.locators.activeNavigationTabButton);
+    }
+
     protected findElements(locator: Locator): Promise<WebElement[]> {
         return this.driver.findElements(locator);
     }
@@ -76,20 +100,4 @@ export class BasePage {
         return this.driver.executeScript(`
             return ${command}`);
     }
-
-    async navigationtab(): Promise<WebElement> {
-        return await this.findElement(By.css("[data-testid='category-nav']"));
-    }
-    async navigationTabButtons(): Promise<WebElement[]> {
-        const navigationTabElement = await this.navigationtab();
-        return await navigationTabElement.findElements(By.css("button"));
-    }
-
-    async activeNavigationTabButton(): Promise<WebElement> {
-        return await this.findElement(
-            By.css("[data-testid='category-nav'] button[data-active='true']")
-        );
-    }
-
-
 }

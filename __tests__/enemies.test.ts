@@ -5,15 +5,13 @@ import { runCharacterCardTests } from "./character-cards.shared";
 
 
 createPageTests("Enemies", EnemiesPage, "enemies", "Enemies", (getPage) => {
-    it(`Enemies hero content title should be: ${strings.heroContent.enemies?.title}`, async () => {
-        const mainTitle = await getPage().mainTitle();
-        const title = await mainTitle.getText();
+    test(`Enemies hero content title should be: ${strings.heroContent.enemies?.title}`, async () => {
+        const title = await getPage().getMainTitleText();
         expect(title).toBe(strings.heroContent.enemies?.title);
     });
 
-    it(`Sub title should be: ${strings.heroContent.enemies?.subtitle}`, async () => {
-        const subTitle = await getPage().subTitle();
-        const title = await subTitle.getText();
+    test(`Sub title should be: ${strings.heroContent.enemies?.subtitle}`, async () => {
+        const title = await getPage().getSubTitleText();
         expect(title).toBe(strings.heroContent.enemies?.subtitle);
     });
 

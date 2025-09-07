@@ -7,8 +7,25 @@ class TimelinePage extends BasePage {
     }
 
     async timelineContainer(): Promise<WebElement> {
-        return await this.findElement(By.css("[data-testid='timeline-container']"));
+        return await this.waitAndFindElement(By.css("[data-testid='timeline-container']"));
     }
+    async timelineCards(): Promise<WebElement[]> {
+        return await this.findElements(By.css("[data-testid^='timeline-event-']"));
+    }
+
+    async timlineYear(context?: WebElement): Promise<WebElement> {
+        const locator = By.css("[data-testid='timeline-year']");
+        return context ? context.findElement(locator) : this.waitAndFindElement(locator);
+    }
+    async timelineTitle(context?: WebElement): Promise<WebElement> {
+        const locator = By.css("[data-testid='timeline-title']");
+        return context ? context.findElement(locator) : this.waitAndFindElement(locator);
+    }
+    async timelineDescription(context?: WebElement): Promise<WebElement> {
+        const locator = By.css("[data-testid='timeline-description']");
+        return context ? context.findElement(locator) : this.waitAndFindElement(locator);
+    }
+
 }
 
 export default TimelinePage;
