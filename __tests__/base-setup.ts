@@ -18,9 +18,14 @@ export function runBaseTests(getPage: () => BasePage, activeTabText: string) {
         });
 
         test(`Navigation tab should have buttons for each category ${strings.navigationItems}`, async () => {
-            const navigationTabButtons = await basePage.getNavigationTabButtons();
-            expect(navigationTabButtons.length).toBe(strings.navigationItems.length);
-            const navigationTabButtonTexts = await Promise.all(navigationTabButtons.map((element) => element.getText()));
+            const navigationTabButtons =
+                await basePage.getNavigationTabButtons();
+            expect(navigationTabButtons.length).toBe(
+                strings.navigationItems.length
+            );
+            const navigationTabButtonTexts = await Promise.all(
+                navigationTabButtons.map((element) => element.getText())
+            );
             expect(navigationTabButtonTexts).toEqual(strings.navigationItems);
         });
 
