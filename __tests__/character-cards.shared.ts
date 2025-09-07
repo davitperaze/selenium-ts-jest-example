@@ -14,7 +14,7 @@ export function runCharacterCardTests(
     characterType: CharacterType
 ) {
     describe("Character Cards", () => {
-        it("should have an image, name, era, description, and fun fact button", async () => {
+        test("should have an image, name, era, description, and fun fact button", async () => {
             const cards = await getCards();
             expect(cards.length).toBeGreaterThan(0);
 
