@@ -1,7 +1,6 @@
 const isCI = process.env.CI === 'true';
 
 const reporters = [
-    "default", "jest-html-reporters"
     "default"
 ];
 
