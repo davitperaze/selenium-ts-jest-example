@@ -19,6 +19,6 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     testMatch: ["**/__tests__/**/*.test.ts"],
-    setupFilesAfterEnv: [],
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
     reporters: reporters
 };
