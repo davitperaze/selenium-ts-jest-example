@@ -1,7 +1,6 @@
 import { WebDriver } from "selenium-webdriver";
 import config from "../config";
 import { BasePage } from "../pages/base.page";
-import * as fs from "fs/promises";
 import { runBaseTests } from "../__tests__/base-setup";
 import { DriverConfig, initializeDriver } from "./browser";
 
@@ -28,20 +27,20 @@ export function createPageTests<T extends BasePage>(
     describe(`${pageName} page tests`, () => {
         let driver: WebDriver;
         let page: T;
-        let userDataDir: string | null;
+        let cleanup: (() => void) | null;
 
         beforeAll(async () => {
             const driverSetup = await initializeDriver(config as DriverConfig);
             driver = driverSetup.driver;
-            userDataDir = driverSetup.userDataDir;
+            cleanup = driverSetup.cleanup;
             page = new PageObject(driver);
             await page.open(config.baseUrl + urlPath);
         });
 
         afterAll(async () => {
             await driver.quit();
-            if (userDataDir) {
-                await fs.rm(userDataDir, { recursive: true, force: true });
+            if (cleanup) {
+                cleanup();
             }
         });
 
