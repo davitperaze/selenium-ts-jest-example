@@ -9,7 +9,7 @@ if (isCI) {
 } else {
     reporters.push(["jest-html-reporters", {
         "publicPath": "./test-report/",
-        "filename": "report.html",
+        "filename": "index.html",
         "darkTheme": true,
         "pageTitle": "Test Report"
     }]);
