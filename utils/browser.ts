@@ -43,6 +43,7 @@ export const initializeDriver = async (
         if (process.env.CI == "true") {
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--disable-gpu");
         }
 
         if (headless) {

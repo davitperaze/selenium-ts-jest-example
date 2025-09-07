@@ -26,28 +26,35 @@ export function createPageTests<T extends BasePage>(
 ) {
     describe(`${pageName} page tests`, () => {
         let driver: WebDriver;
-        let page: T;
+        let page: T | null = null;
         let cleanup: (() => void) | null;
 
         beforeAll(async () => {
             const driverSetup = await initializeDriver(config as DriverConfig);
             driver = driverSetup.driver;
             cleanup = driverSetup.cleanup;
-            page = new PageObject(driver);
-            await page.open(config.baseUrl + urlPath);
-        });
-
-        afterAll(async () => {
-            await driver.quit();
-            if (cleanup) {
-                cleanup();
+            if (driver) {
+                page = new PageObject(driver);
+                await page.open(config.baseUrl + urlPath);
             }
         });
 
+        afterAll(async () => {
+            // Ensure driver exists before trying to quit.
+            if (driver) await driver.quit();
+            if (cleanup) cleanup();
+        });
+
         // Run the common tests for the header and navigation
-        runBaseTests(() => page, activeTabText);
+        runBaseTests(() => page!, activeTabText);
 
         // Run the page-specific tests
-        pageSpecificTests(() => page);
+        pageSpecificTests(() => {
+            if (!page) {
+                // Throw a clear error if the page object was not initialized.
+                throw new Error("Page object was not initialized. The driver might have failed to start.");
+            }
+            return page;
+        });
     });
 }
