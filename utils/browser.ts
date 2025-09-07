@@ -1,8 +1,8 @@
 import { Builder, WebDriver } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome";
 import * as firefox from "selenium-webdriver/firefox";
-import * as fs from "fs";
 import * as os from "os";
+import * as fs from "fs/promises";
 import * as path from "path";
 
 export interface DriverConfig {
@@ -16,7 +16,10 @@ export interface DriverConfig {
 
 export const initializeDriver = async (
     config: DriverConfig = {}
-): Promise<WebDriver> => {
+): Promise<{
+    driver: WebDriver;
+    userDataDir: string | null;
+}> => {
     const browser = config.browser || "chrome";
     const windowSize = config.windowSize || { width: 1920, height: 1080 };
     const headless = config.headless ?? true;
@@ -24,13 +27,14 @@ export const initializeDriver = async (
     const builder = new Builder().forBrowser(browser);
 
     if (browser === "chrome") {
-        const options = new chrome.Options();
+        let userDataDir: string | null = null;
 
-        // Use a temporary user data directory to avoid session conflicts,
-        // especially in CI environments where multiple instances mugh run.
-        const userDataDir = fs.mkdtempSync(
-            path.join(os.tmpdir(), "chrome-user-data-")
+        const tempDir = path.join(os.tmpdir(), "ui_tests");
+        await fs.mkdir(tempDir, { recursive: true });
+        userDataDir = await fs.mkdtemp(
+            path.join(tempDir, "chrome-user-data-")
         );
+        const options = new chrome.Options();
         options.addArguments(`--user-data-dir=${userDataDir}`);
 
         // Add arguments for CI/Docker environments.
@@ -44,6 +48,10 @@ export const initializeDriver = async (
         }
         options.windowSize(windowSize);
         builder.setChromeOptions(options);
+
+        const driver = await builder.build();
+        await driver.manage().setTimeouts({ implicit: 5000 });
+        return { driver, userDataDir };
     } else if (browser === "firefox") {
         const options = new firefox.Options();
         if (headless) {
@@ -51,11 +59,12 @@ export const initializeDriver = async (
             options.windowSize(windowSize);
         }
         builder.setFirefoxOptions(options);
+        const driver = await builder.build();
+        await driver.manage().setTimeouts({ implicit: 5000 });
+        return { driver, userDataDir: null };
     }
 
     const driver = await builder.build();
-
     await driver.manage().setTimeouts({ implicit: 5000 });
-
-    return driver;
+    return { driver, userDataDir: null };
 };
