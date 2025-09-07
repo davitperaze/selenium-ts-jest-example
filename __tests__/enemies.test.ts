@@ -1,6 +1,8 @@
 import EnemiesPage from "../pages/enemies.page";
 import strings from "../resources/strings";
 import { createPageTests } from "../utils/test-setup";
+import { runCharacterCardTests } from "./character-cards.shared";
+
 
 createPageTests("Enemies", EnemiesPage, "enemies", "Enemies", (getPage) => {
     it(`Enemies hero content title should be: ${strings.heroContent.enemies?.title}`, async () => {
@@ -14,4 +16,7 @@ createPageTests("Enemies", EnemiesPage, "enemies", "Enemies", (getPage) => {
         const title = await subTitle.getText();
         expect(title).toBe(strings.heroContent.enemies?.subtitle);
     });
+
+    runCharacterCardTests(() => getPage().enemyCards(), "enemy");
+
 });

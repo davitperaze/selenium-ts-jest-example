@@ -1,6 +1,7 @@
 import FriendsPage from "../pages/friends.page";
 import strings from "../resources/strings";
 import { createPageTests } from "../utils/test-setup";
+import { runCharacterCardTests } from "./character-cards.shared";
 
 createPageTests("Friends", FriendsPage, "friends", "Friends", (getPage) => {
     it(`Friends hero content title should be: ${strings.heroContent.friends?.title}`, async () => {
@@ -14,4 +15,6 @@ createPageTests("Friends", FriendsPage, "friends", "Friends", (getPage) => {
         const title = await subTitle.getText();
         expect(title).toBe(strings.heroContent.friends?.subtitle);
     });
+
+    runCharacterCardTests(() => getPage().friendCards(), "friend");
 });

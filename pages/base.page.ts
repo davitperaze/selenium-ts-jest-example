@@ -90,4 +90,6 @@ export class BasePage {
             By.css("[data-testid='category-nav'] button[data-active='true']")
         );
     }
+
+
 }
